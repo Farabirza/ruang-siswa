@@ -2,26 +2,48 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\GenerateUuid;
+use App\Models\Authority;
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, GenerateUuid;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = [ 'id' ];
+    
+    // get 'user' authority_id
+    public function get_authority_user() {
+        if(!Authority::where('name', 'admin')->first()) {
+            $authority = Authority::create(['name' => 'superadmin']);
+            $authority = Authority::create(['name' => 'admin']);
+        }
+        if(!Authority::where('name', 'user')->first()) {
+            $create_authority = Authority::create(['name'=>'user']);
+        }
+        $authority = Authority::where('name', 'user')->first();
+        return $authority->id;      
+    }
+
+    // boot function
+    protected static function boot() {
+        parent::boot();
+
+        static::creating( function($model) {
+            $model->authority_id = ($model->authority_id != null) ? $model->authority_id : $model->get_authority_user();
+        });
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -40,6 +62,18 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
+    
+    public function authority()
+    {
+        return $this->belongsTo(Authority::class, 'authority_id');
+    }
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+    public function achievement()
+    {
+        return $this->hasMany(Achievement::class);
+    }
 }

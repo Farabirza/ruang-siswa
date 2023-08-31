@@ -28,7 +28,7 @@ table { font-size: .8em; }
 
     <!-- container start -->
     <div class="container-fluid mb-3">
-        <div class="row bg-white p-3 rounded shadow">
+        <div class="row bg-white p-3 mx-2 rounded shadow">
             <div class="col-md-12">
                 <h3 class="d-flex align-items-center gap-2 fs-16 mb-3"><i class="bx bx-group"></i>Student list</h3>
                 <div class="table-container">

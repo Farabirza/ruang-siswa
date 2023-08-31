@@ -23,7 +23,7 @@
                         <label for="email2" class="form-label">Email extension</label>
                     </div>
                 </div>
-                <p class="mb-3 fs-10 fst-italic text-secondary">*) you only need to put the first part of your email</p>
+                <p class="mb-3 fs-9 fst-italic text-secondary">*) you only need to put the first part of your email</p>
                 <div class="input-group form-floating mb-3">
                     <input type="password" name="password" id="modal-login-password" class="form-control form-control-sm" placeholder="Password" value="" required>
                     <span class="input-group-text hover-pointer" onclick="togglePassword(password_visible)">
@@ -66,7 +66,7 @@
                         <label for="modal-register-email2" class="label">Email extension</label>
                     </div>
                 </div>
-                <p class="mb-3 fs-10 fst-italic text-secondary">*) you only need to put the first part of your email</p>
+                <p class="mb-3 fs-9 fst-italic text-secondary">*) you only need to put the first part of your email</p>
                 <p id="alert-register-email" class="alert alert-danger d-none mb-3"></p>
                 <div class="input-group form-floating mb-3">
                     <input type="password" name="password" id="modal-register-password" class="input form-control form-control-sm" placeholder="Password" value="" required>
@@ -81,7 +81,7 @@
                     <label for="modal-register-password_confirmation" class="form-label">Confirm password</label>
                 </div>
                 <p id="alert-register-password_confirmation" class="alert alert-danger d-none mb-3"></p>
-                <p class="text-muted fst-italic fs-10 mb-3">*) password must be at least 6 characters</p>
+                <p class="text-muted fst-italic fs-9 mb-3">*) password must be at least 6 characters</p>
                 <div class="form-outline mb-3">
                     <p class="" style="color: #393f81;"><input id="modal-register-agreement" type="checkbox" name="agreement" value="true" class="mr-8"> I agree with <span class="text-primary hover-pointer" onclick="modal_tos_show()">terms conditions and privacy policy</span></p>
                 </div>
@@ -152,6 +152,7 @@ $('#modal-register-agreement').change(function() {
     }
 });
 
+// modals
 const modal_login_show = () => {
   $('.modal').modal('hide');
   $('#modal-login').modal('show');
@@ -184,6 +185,9 @@ const togglePassword = () => {
 }
 
 $(document).ready(function(){
+    @if(isset($_GET['login']))
+    modal_login_show();
+    @endif
     @error('email')
     errorMessage('Email error : {{$message}}');
     @enderror

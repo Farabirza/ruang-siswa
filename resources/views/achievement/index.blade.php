@@ -7,6 +7,9 @@ table { font-size: .8em; }
 .alert { font-size: .8em; padding: 10px; }
 .dropdown-item { display: flex; align-items: center; gap: 8px; padding-left: 10px; }
 .dropdown-item:hover { cursor: pointer; }
+@media (max-width:1199px) {
+    .table-container { min-width: 768px; }
+}
 </style>
 @endpush
 
@@ -19,7 +22,7 @@ table { font-size: .8em; }
             <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item"><a href="/achievement">Achievement</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><a href="/achievement">Achievement</a></li>
                 </ol>
             </nav>
         </div>
@@ -28,9 +31,9 @@ table { font-size: .8em; }
 
     <!-- container start -->
     <div class="container-fluid mb-3">
-        <div class="row bg-white p-3 rounded shadow">
+        <div class="row bg-white p-3 mx-2 rounded shadow">
             <div class="col-md-12 py-2">
-                <h3 class="d-flex align-items-center justify-content-between gap-2 fs-16 mb-3"><span><i class="bx bx-list-ul"></i>Achievement list</span><a href="/achievement/create" class="popper" title="New achievement"><i class="bx bx-plus p-1 rounded-circle border border-primary btn-outline-primary"></i></a></h3>
+                <h3 class="d-flex align-items-center justify-content-between gap-2 fs-16 mb-3"><span class="flex-start gap-2"><i class="bx bx-list-ul"></i>Achievement list</span><a href="/achievement/create" class="popper" title="New achievement"><i class="bx bx-plus p-1 rounded-circle border border-primary btn-outline-primary"></i></a></h3>
                 <div class="table-container">
                     <table class="table table-striped" id="table-achievements">
                         <thead>
@@ -38,6 +41,7 @@ table { font-size: .8em; }
                             <th>Title</th>
                             <th>Grade</th>
                             <th>Level</th>
+                            <th>Organizer</th>
                             <th><i class="bx bx-dots-vertical"></i></th>
                         </thead>
                         <tbody>
@@ -45,9 +49,10 @@ table { font-size: .8em; }
                             @forelse($achievements as $item)
                             <tr>
                                 <td>{{($item->user->profile ? $item->user->profile->full_name : $item->user->email)}}</td>
-                                <td>{{$item->title}}</td>
+                                <td><a href="/achievement/{{$item->id}}" class="hover-primary">{{$item->title}}</a></td>
                                 <td>{{$item->grade_level}}</td>
                                 <td>{{$item->level}}</td>
+                                <td>{{$item->organizer}}</td>
                                 <td>
                                     <div class="dropdown">
                                         <i class="bx bx-dots-vertical bx-border-circle btn-outline-dark p-1" role="button" data-bs-toggle="dropdown" aria-expanded="false"></i>

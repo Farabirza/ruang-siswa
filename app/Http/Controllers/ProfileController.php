@@ -77,11 +77,15 @@ class ProfileController extends Controller
                 'errors' => $errors,
             ], 400);
         }
-        $create = new ProfileResource(Profile::create($request->validated()));
+        $create_profile = new ProfileResource(Profile::create($request->validated()));
+        $user = User::find($create_profile->user_id);
+        $user->update([
+            'status' => ($request->role != 'student' && $user->confirmation == 0) ? 'confirmation' : 'active',
+        ]);
         return response()->json([
             'message' => 'User profile created',
             'new' => true,
-            'profile_id' => $create->id,
+            'profile_id' => $create_profile->id,
         ], 200);
     }
 

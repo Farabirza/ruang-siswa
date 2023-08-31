@@ -65,6 +65,8 @@ class AchievementController extends Controller
      */
     public function store(StoreAchievementRequest $request)
     {
+        $user = User::find($request->user_id);
+
         // subject
         $subject_id = $request->subject_id;
         if($request->subject_id == '-') {
@@ -77,6 +79,24 @@ class AchievementController extends Controller
             }
             $subject_id = $subject->id;
         }
+
+        // processing image
+        $files = [];
+        if($request->images) {
+            foreach($request->images as $key => $image) {
+                $img_parts = explode(";base64,", $image);
+                $img_type_aux = explode("image/", $img_parts[0]);
+                $img_type = $img_type_aux[1];
+                $img_base64 = base64_decode($img_parts[1]);
+                $img_name = 'gallery-'.$user->username.'-'.time().'-'.($key+1).'.'.$img_type;
+                $file = public_path('img/gallery/'.$img_name);
+                file_put_contents($file, $img_base64);
+                
+                $files[$key]['name'] = $img_name;
+                $files[$key]['caption'] = (isset($request->captions[$key])) ? $request->captions[$key] : '';
+            }
+        }
+        dd($request->all());
 
         // certificate
         $certificate_image = '';
@@ -96,8 +116,7 @@ class AchievementController extends Controller
         $create_achievement = Achievement::create([
             'user_id' => $request->user_id,
             'subject_id' => $subject_id,
-            'attainment' => $request->attainment,
-            'name' => $request->name,
+            'title' => $request->title,
             'year' => $request->year,
             'organizer' => $request->organizer,
             'url' => $request->url,
@@ -116,7 +135,12 @@ class AchievementController extends Controller
      */
     public function show(Achievement $achievement)
     {
-        //
+        return view('achievement.show', [
+            'dashboard_header' => '<i class="bx bxs-medal me-3"></i><span>Achievement</span>',
+            'page_title' => "Ruang Siswa | Achievement",
+            'achievement' => $achievement,
+            'user' => $achievement->user,
+        ]);
     }
 
     /**

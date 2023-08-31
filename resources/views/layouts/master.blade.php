@@ -23,7 +23,7 @@ body { background: #f9f9f9; }
 @if(isset($page_title))
 <title>{{$page_title}}</title>
 @else
-<title>cvkreatif.com</title>
+<title>Ruang Siswa</title>
 @endif
   
 @stack('css-styles')

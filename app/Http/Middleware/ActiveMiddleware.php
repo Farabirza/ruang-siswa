@@ -19,6 +19,9 @@ class ActiveMiddleware
     {
         if(Auth::check()) {
             switch(Auth::user()->status) {
+                case 'no_profile':
+                    return redirect('/profile');
+                break;
                 case 'suspended':
                     return redirect('/profile')->with('error', "Your account is being suspended, ask admin to re-activate your account");
                 break;

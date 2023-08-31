@@ -62,7 +62,7 @@ img { max-width: 100%; }
                 <div class="mb-3 d-flex flex-remove-md gap-3">
                     <div class="col">
                         <label for="achievement-title" class="form-label">Title</label>
-                        <input type="text" name="title" id="achievement-title" class="form-control form-control-sm" placeholder="ex: Juara 1 Olimpiade Sains Nasional" value="{{ old('title') }}" required>
+                        <input type="text" name="title" id="achievement-title" class="form-control form-control-sm" placeholder="ex: Juara 1 Olimpiade Sains Nasional" value="{{ old('title') }}" autocomplete="off" required>
                         <p class="form-note">*) required</p>
                     </div>
                     <div class="col">
@@ -79,22 +79,22 @@ img { max-width: 100%; }
                         <label for="achievement-grade_level" class="form-label">Grade level</label>
                         <select name="grade_level" id="achievement-grade_level" class="form-select form-select-sm">
                             <optgroup>
-                                <option value="12 Senior high">3rd grade senior high school</option>
-                                <option value="11 Senior high">2nd grade senior high school</option>
-                                <option value="10 Senior high">1st grade senior high school</option>
+                                <option value="12 senior high">3rd grade senior high school</option>
+                                <option value="11 senior high">2nd grade senior high school</option>
+                                <option value="10 senior high">1st grade senior high school</option>
                             </optgroup>
                             <optgroup>
-                                <option value="9 Junior high">3rd grade junior high school</option>
-                                <option value="8 Junior high">2nd grade junior high school</option>
-                                <option value="7 Junior high">1st grade junior high school</option>
+                                <option value="9 junior high">3rd grade junior high school</option>
+                                <option value="8 junior high">2nd grade junior high school</option>
+                                <option value="7 junior high">1st grade junior high school</option>
                             </optgroup>
                             <optgroup>
-                                <option value="6 Elementary">6th grade elementary school</option>
-                                <option value="5 Elementary">5th grade elementary school</option>
-                                <option value="4 Elementary">4th grade elementary school</option>
-                                <option value="3 Elementary">3rd grade elementary school</option>
-                                <option value="2 Elementary">2nd grade elementary school</option>
-                                <option value="1 Elementary">1st grade elementary school</option>
+                                <option value="6 elementary">6th grade elementary school</option>
+                                <option value="5 elementary">5th grade elementary school</option>
+                                <option value="4 elementary">4th grade elementary school</option>
+                                <option value="3 elementary">3rd grade elementary school</option>
+                                <option value="2 elementary">2nd grade elementary school</option>
+                                <option value="1 elementary">1st grade elementary school</option>
                             </optgroup>
                         </select>
                     </div>
@@ -125,7 +125,8 @@ img { max-width: 100%; }
                     </div>
                     <div class="col">
                         <label for="achievement-url" class="form-label">URL</label>
-                        <input type="text" name="url" id="achievement-url" class="form-control form-control-sm" placeholder="Link towards competition homepage" value="{{ old('url') }}">
+                        <input type="text" name="url" id="achievement-url" class="form-control form-control-sm" placeholder="ex: https://pribadidepok.sch.id" value="{{ old('url') }}">
+                        <p class="form-note">*) link towards competition or organizer's homepage</p>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -144,12 +145,18 @@ img { max-width: 100%; }
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Documentation images</label>
-                    <div id="container-documentations" class="flex-start gap-3">
-                        <div class="flex-center p-5 rounded border btn-outline-primary" role="button">
+                    <div id="container-documentations" class="flex-start flex-wrap gap-3">
+                        <label for="achievement-documentation">
+                        <div class="flex-center rounded border btn-outline-primary" style="height:240px;width:240px;" role="button">
                             <div class="text-center" style="height:80px;width:60px;">
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M432,112V96a48.14,48.14,0,0,0-48-48H64A48.14,48.14,0,0,0,16,96V352a48.14,48.14,0,0,0,48,48H80" style="fill:none;stroke:currentColor;stroke-linejoin:round;stroke-width:32px"/><rect x="96" y="128" width="400" height="336" rx="45.99" ry="45.99" style="fill:none;stroke:currentColor;stroke-linejoin:round;stroke-width:32px"/><ellipse cx="372.92" cy="219.64" rx="30.77" ry="30.55" style="fill:none;stroke:currentColor;stroke-miterlimit:10;stroke-width:32px"/><path d="M342.15,372.17,255,285.78a30.93,30.93,0,0,0-42.18-1.21L96,387.64" style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path d="M265.23,464,383.82,346.27a31,31,0,0,1,41.46-1.87L496,402.91" style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/></svg>
                             </div>
                         </div>
+                        </label>
+                    </div>
+                    <p class="form-note">*) maximum allowed file size is 2 MB. You can go to <a href="https://www.iloveimg.com/resize-image" class="text-primary fw-500" target="_blank">this website</a> to resize your image's size</p>
+                    <div id="documentation-input" class="d-none">
+                        <input type="file" name="image" id="achievement-documentation">
                     </div>
                 </div>
                 <div class="flex-end gap-3">
@@ -167,6 +174,35 @@ img { max-width: 100%; }
 
 @push('scripts')
 <script type="text/javascript">
+    
+// documentation
+var image_number = 1;
+$('input[name="image"]').change(function(e) {
+    if(image_number >= 4) {
+        return infoMessage("you've reached the maximum allowed number of files");
+    }
+    if(e.target.files && e.target.files[0]) {
+        let file = e.target.files[0];
+        const maxAllowedSize = 1 * 1024 * 1024;
+        if(file.size > maxAllowedSize) {
+            return infoMessage('your file exceed the maximum allowed file size');
+        }
+    }
+    let image_val = $(this)[0].files[0];
+    let reader = new FileReader();
+    reader.onload = (e) => { 
+        image_number += 1;
+        $('#container-documentations').append(
+            '<img id="documentation-image-'+ image_number +'" src="" class="img-thumbnail popper hover-pointer" style="height:240px;" title="" onclick="modalImage('+ image_number +')">'
+        );
+        $('#documentation-image-' + image_number).attr('src', e.target.result); 
+        $('#documentation-input').append(
+            '<input type="text" id="image-'+ image_number +'" name="images['+ image_number +']" value="'+ e.target.result +'">'
+        );
+    }
+    reader.readAsDataURL(this.files[0]); 
+});
+
 // select subject start
 $('#achievement-subject_id').change(function() {
     if($(this).find(':selected').val() == '-') {

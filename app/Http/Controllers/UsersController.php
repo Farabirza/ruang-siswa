@@ -59,13 +59,15 @@ class UsersController extends Controller
             if(!$authority) {
                 $create_authority = Authority::create(['name' => $get_authority]);
             }
-            
+
             $create_user = User::create([
                 'email' => $google->email,
+                'username' => explode('@', $google->email)[0],
                 'google_id' => $google->id,
                 'password' => bcrypt($google->email),
                 'email_verified_at' => date('Y-m-d H:i:s', time()),
                 'authority_id' => $authority->id,
+                'status' => 'no_profile',
             ]);
             Auth::login($create_user);
             return redirect()->intended('/');
@@ -80,9 +82,12 @@ class UsersController extends Controller
     public function google_register(Request $request) {
         $create = User::create([
             'email' => $request->google_email,
+            'username' => explode('@', $request->google_email)[0],
+            'username' => $username,
             'google_id' => $request->google_id,
             'password' => bcrypt($request->google_email),
             'email_verified_at' => date('Y-m-d H:i:s', time()),
+            'status' => 'no_profile',
         ]);
         Auth::login($create);
         return redirect()->intended('/');
@@ -105,7 +110,9 @@ class UsersController extends Controller
 
         $user = User::create([
             "email" => $request->email,
+            "username" => explode('@', $request->email)[0],
             "password" => $password,
+            'status' => 'no_profile',
         ]);
         $user->email = explode('@', $user->email)[0];
         $user->key = $request->password;

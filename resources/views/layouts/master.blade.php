@@ -15,7 +15,7 @@
 <link href="{{ asset('/vendor/toastr/toastr.min.css') }}" rel="stylesheet">
 
 <!-- Main CSS File -->
-<link href="{{ asset('/css/style.css') }}?v=4" rel="stylesheet">
+<link href="{{ asset('/css/style.css') }}?v=1.2" rel="stylesheet">
 <style>
 body { background: #f9f9f9; }
 </style>

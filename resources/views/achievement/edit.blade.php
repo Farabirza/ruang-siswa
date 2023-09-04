@@ -58,13 +58,9 @@ img { max-width: 100%; }
                     <div class="col">
                         <label for="achievement-level" class="form-label">Regional level</label>
                         <select name="level" id="achievement-level" class="form-select form-select-sm">
-                            <option value="intraschool">Intraschool</option>
-                            <option value="interschool">Interschool</option>
-                            <option value="local">Local</option>
-                            <option value="city">City</option>
-                            <option value="province">Province</option>
-                            <option value="national">National</option>
-                            <option value="international">International</option>
+                            <option value="Local">Local</option>
+                            <option value="National">National</option>
+                            <option value="International">International</option>
                         </select>
                     </div>
                 </div>
@@ -72,24 +68,9 @@ img { max-width: 100%; }
                     <div class="col">
                         <label for="achievement-grade_level" class="form-label">Grade level</label>
                         <select name="grade_level" id="achievement-grade_level" class="form-select form-select-sm">
-                            <optgroup>
-                                <option value="12 senior high">3rd grade senior high school</option>
-                                <option value="11 senior high">2nd grade senior high school</option>
-                                <option value="10 senior high">1st grade senior high school</option>
-                            </optgroup>
-                            <optgroup>
-                                <option value="9 junior high">3rd grade junior high school</option>
-                                <option value="8 junior high">2nd grade junior high school</option>
-                                <option value="7 junior high">1st grade junior high school</option>
-                            </optgroup>
-                            <optgroup>
-                                <option value="6 elementary">6th grade elementary school</option>
-                                <option value="5 elementary">5th grade elementary school</option>
-                                <option value="4 elementary">4th grade elementary school</option>
-                                <option value="3 elementary">3rd grade elementary school</option>
-                                <option value="2 elementary">2nd grade elementary school</option>
-                                <option value="1 elementary">1st grade elementary school</option>
-                            </optgroup>
+                            <option value="Senior High">Senior high</option>
+                            <option value="Junior High">Junior high</option>
+                            <option value="Elementary">Elementary</option>
                         </select>
                     </div>
                     <div class="col">

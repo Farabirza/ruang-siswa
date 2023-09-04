@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Profile;
+use App\Models\Achievement;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +27,7 @@ class HomeController extends Controller
         return view('index', [
             'metaTags' => $this->metaTags,
             'page_title' => 'Ruang Siswa',
+            'achievements' => Achievement::where('confirmed', true)->orderByDesc('created_at')->paginate(12),
         ]);
     }
     public function action(Request $request)

@@ -49,7 +49,7 @@ table { font-size: .8em; }
                             @forelse($achievements as $item)
                             @if($item->confirmed == 1)
                             <tr>
-                                <td>{{($item->user->profile ? $item->user->profile->full_name : $item->user->email)}}</td>
+                                <td><a href="/profile/{{$item->user->profile->id}}" class="hover-primary">{{ $item->user->profile->full_name }}</a></td>
                                 <td><a href="/achievement/{{$item->id}}" class="hover-primary">{{$item->title}}</a></td>
                                 <td>{{$item->grade_level}}</td>
                                 <td>{{$item->level}}</td>

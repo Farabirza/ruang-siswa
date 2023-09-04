@@ -139,6 +139,15 @@ h1, h2, h3, h4, h5, h6 {
 
 .img-grayscale { filter: grayscale(100%); }
 
+.mh-60 { max-height: 60px; }
+.mh-80 { max-height: 80px; }
+.mh-100 { max-height: 100px; }
+.mh-120 { max-height: 120px; }
+.mh-160 { max-height: 160px; }
+.mh-180 { max-height: 180px; }
+.mh-240 { max-height: 240px; }
+.mh-320 { max-height: 320px; }
+
 /* ================= Custom template end ================= */
 
 

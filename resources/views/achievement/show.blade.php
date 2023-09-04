@@ -28,6 +28,9 @@ table { font-size: .8em; }
     <div class="container mb-3">
         <div class="row bg-white p-3 rounded shadow">
             <div class="col-md-12 py-2">
+                @if($achievement->confirmed == 0)
+                <p class="alert alert-warning fs-9">This achievement data is not published yet until confirmation by a teacher</p>
+                @endif
                 <h3 class="d-flex align-items-center justify-content-between gap-2 fs-16 mb-4"><span class="flex-start gap-2"><i class="bx bx-medal"></i>Achievement</span></h3>
                 <div class="d-flex align-items-center flex-remove-md gap-3 mb-3">
                     <div class="mb-2 text-center">
@@ -37,7 +40,7 @@ table { font-size: .8em; }
                         <img src="{{ asset('img/profiles/user.jpg') }}" alt="" class="rounded shadow" style="max-height:240px">
                         @endif
                         @if($user->profile)
-                        <h5 class="text-primary fs-10 ls-1 mt-3 mb-1">{{$user->profile->full_name}}</h5>
+                        <h5 class="text-primary fs-10 ls-1 mt-3 mb-1"><a href="/profile/{{$user->profile->id}}">{{$user->profile->full_name}}</a></h5>
                         @endif
                         <p class="fs-8 fst-italic">{{$user->email}}</p>
                     </div>

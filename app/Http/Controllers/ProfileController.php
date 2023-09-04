@@ -95,12 +95,14 @@ class ProfileController extends Controller
      * @param  \App\Models\Profile  $profile
      * @return \Illuminate\Http\Response
      */
-    public function show($user_id)
+    public function show(Profile $profile)
     {
-        $user = User::find($user_id);
-        return response()->json([
-            'data' => $user->profile,
-        ], 200);
+        return view('profile.show', [
+            'dashboard_header' => '<i class="bx bxs-user me-3"></i><span>User Profile</span>',
+            'page_title' => "Ruang Siswa | Profile",
+            'profile' => $profile,
+            'user' => User::find($profile->user_id),
+        ]);
     }
 
     /**

@@ -36,7 +36,6 @@ td { vertical-align: middle; }
                 <div class="table-container">
                     <table id="table-students" class="table table-striped">
                         <thead>
-                            <th>Profile</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Grade</th>
@@ -58,16 +57,7 @@ td { vertical-align: middle; }
                                 }
                             ?>
                             <tr>
-                                @if($item->picture)
-                                <td>
-                                    <a href="{{asset('img/profiles/'.$item->picture)}}" class="glightbox" data-glightbox="title:{{$item->profile->full_name}};">
-                                        <img src="{{asset('img/profiles/'.$item->picture)}}" class="rounded-circle shadow-sm" style="max-height:40px">
-                                    </a>
-                                </td>
-                                @else
-                                <td><img src="{{asset('img/profiles/user.jpg')}}" class="rounded-circle shadow-sm" style="max-height:40px"></td>
-                                @endif
-                                <td>{{ $item->profile->full_name }}</td>
+                                <td><a href="/profile/{{$item->profile->id}}" class="hover-primary">{{ $item->profile->full_name }}</a></td>
                                 <td>{{ $item->email }}</td>
                                 <td>{{ $grade_level }}</td>
                                 <td>

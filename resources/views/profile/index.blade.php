@@ -39,7 +39,7 @@ table thead th { font-weight: 500; }
             <div class="col-md-12 mb-2">
                 <div class="alert alert-success">
                     <h1 class="display-5 fs-30">Congratulations!</h1>
-                    <p class="fs-9">You have successfully registered, one last step and you are good to go :)</p>
+                    <p class="fs-10 mb-0">You have successfully registered, one last step and you are good to go :)</p>
                 </div>
             </div>
             @endif

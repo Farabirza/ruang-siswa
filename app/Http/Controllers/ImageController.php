@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Image;
-use App\Http\Requests\StoreImageRequest;
-use App\Http\Requests\UpdateImageRequest;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
+use File;
 
 class ImageController extends Controller
 {
@@ -62,5 +66,16 @@ class ImageController extends Controller
     public function destroy(Image $image)
     {
         //
+    }
+    public function delete($image_id)
+    {
+        // remove old pdf
+        $image = Image::find($image_id);
+        $path = public_path('img/photos/'.$image->file_name);
+        if(File::exists($path)) {
+            $delete_image = unlink($path);
+        }
+        $image->delete();
+        return back()->with('success', "Documentation image deleted");
     }
 }

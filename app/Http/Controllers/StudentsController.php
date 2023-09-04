@@ -15,6 +15,7 @@ class StudentsController extends Controller
     public function __construct() {
         $this->metaTags = [
             'title' => 'Ruang Siswa',
+            'description' => '',
         ];
     }
     /**

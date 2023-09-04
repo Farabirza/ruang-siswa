@@ -23,6 +23,7 @@ class UsersController extends Controller
     public function __construct() {
         $this->metaTags = [
             'title' => 'Ruang Siswa',
+            'description' => '',
         ];
     }
     public function validateError()
@@ -163,11 +164,12 @@ class UsersController extends Controller
     public function confirmation()
     {
         if(Auth::user()->confirmation == 1) {
-            return redirect('/book')->with('info', 'Your account is already confirmed');
+            return redirect('/')->with('info', 'Your account is already confirmed');
         }
         return view('auth.confirmation', [
+            'noSidebar' => true,
             'metaTags' => $this->metaTags,
-            'page_title' => 'Digital Library | Confirmation',
+            'page_title' => 'Ruang Siswa | Confirmation',
         ]);
     }
     public function confirm_user($user_id)
@@ -176,16 +178,8 @@ class UsersController extends Controller
             return back()->with('error', 'Access denied!');
         }
         $user = User::find($user_id);
-        $user->update(['confirmation' => 1]);
+        $user->update(['confirmation' => 1, 'status' => 'active']);
         return back()->with('success', 'User confirmed');
-    }
-    public function activity()
-    {
-        return view('user.activity', [
-            'dashboard_header' => '<i class="bx bx-time-five me-3"></i><span>User activity</span>',
-            'metaTags' => $this->metaTags,
-            'page_title' => 'Digital Library | Activity',
-        ]);
     }
     public function show(User $user)
     {
@@ -205,7 +199,7 @@ class UsersController extends Controller
                         'message' => "Confirmation key doesn't match!"
                     ], 400);
                 }
-                $user = User::find(Auth::user()->id)->update(['confirmation' => 1]);
+                $user = User::find(Auth::user()->id)->update(['confirmation' => 1, 'status' => 'active']);
                 return response()->json([
                     'message' => "User confirmed"
                 ], 200);

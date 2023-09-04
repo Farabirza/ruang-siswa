@@ -33,9 +33,6 @@ img { max-width: 100%; }
     <div class="container mb-3">
         <div class="row bg-white p-3 rounded shadow">
             <div class="col-md-12 py-2">
-                @if(session('success'))
-                <p class="alert alert-success mb-3">Success! New achievement data has been stored</p>
-                @endif
                 <h3 class="d-flex align-items-center gap-2 fs-16 mb-3"><i class="bx bx-plus-circle"></i>New achievement</h3>
 
                 <!-- form achievement start -->
@@ -43,11 +40,10 @@ img { max-width: 100%; }
                 @csrf
                 <div class="mb-3">
                     <label for="achievement-user_id" class="form-label">Student</label>
-                    @if(Auth::user()->profile->role == 'student')
-                    <select name="user_id" id="achievement-user_id" class="form-select form-select-sm" disabled>
-                    @else
                     <select name="user_id" id="achievement-user_id" class="form-select form-select-sm">
-                    @endif
+                        @if(Auth::user()->profile->role == 'student')
+                        <option value="{{Auth::user()->id}}" selected>{{Auth::user()->profile->full_name}} | {{Auth::user()->email}}</option>
+                        @else
                         @forelse($students as $item)
                         @if(Auth::user()->id == $item->id)
                         <option value="{{$item->id}}" selected>{{$item->profile->full_name}} | {{$item->email}}</option>
@@ -57,18 +53,23 @@ img { max-width: 100%; }
                         @empty
                         <option value="">Empty</option>
                         @endforelse
+                        @endif
                     </select>
                 </div>
                 <div class="mb-3 d-flex flex-remove-md gap-3">
                     <div class="col">
                         <label for="achievement-title" class="form-label">Title</label>
-                        <input type="text" name="title" id="achievement-title" class="form-control form-control-sm" placeholder="ex: Juara 1 Olimpiade Sains Nasional" value="{{ old('title') }}" autocomplete="off" required>
+                        <input type="text" name="title" id="achievement-title" class="form-control form-control-sm" placeholder="ex: Juara 1 Olimpiade Sains Nasional" value="{{ old('title') }}" required>
                         <p class="form-note">*) required</p>
                     </div>
                     <div class="col">
                         <label for="achievement-level" class="form-label">Regional level</label>
                         <select name="level" id="achievement-level" class="form-select form-select-sm">
+                            <option value="intraschool">Intraschool</option>
+                            <option value="interschool">Interschool</option>
                             <option value="local">Local</option>
+                            <option value="city">City</option>
+                            <option value="province">Province</option>
                             <option value="national">National</option>
                             <option value="international">International</option>
                         </select>
@@ -100,7 +101,7 @@ img { max-width: 100%; }
                     </div>
                     <div class="col">
                         <label for="achievement-year" class="form-label">Year</label>
-                        <input type="number" name="year" id="achievement-year" class="form-control form-control-sm" value="{{ old('year') }}" placeholder="ex: {{date('Y')}}">
+                        <input type="number" name="year" id="achievement-year" class="form-control form-control-sm" value="{{ (old('year') ? old('year') : date('Y')) }}" placeholder="ex: {{date('Y')}}">
                         @error('year')
                         <p class="alert alert-danger">{{$message}}</p>
                         @enderror
@@ -116,6 +117,9 @@ img { max-width: 100%; }
                         <option value="-">Other subject</option>
                     </select>
                     <div id="achievement-subject">
+                    @if(count($subjects) == 0)
+                    <input type="text" name="subject" class="form-control form-control-sm mt-3" placeholder="Input the name of the subject" value="{{old('subject')}}" required>
+                    @endif
                     </div>
                 </div>
                 <div class="mb-3 d-flex flex-remove-md gap-3">
@@ -135,32 +139,25 @@ img { max-width: 100%; }
                 </div>
                 <div class="mb-3 d-flex flex-remove-md gap-3">
                     <div class="col">
-                        <label for="achievement-certificate_image" class="form-label">Certificate image</label>
+                        <p class="m-0"><label for="achievement-certificate_image" class="form-label">Certificate image</label></p>
+                        <img src="{{asset('img/materials/noimage.jpg')}}" id="certificate_image-preview" class="img-thumbnail mb-2" style="max-height:240px">
                         <input type="file" name="certificate_image" id="achievement-certificate_image" class="form-control form-control-sm" accept="image/*" value="{{ old('certificate_image') }}">
                     </div>
                     <div class="col">
-                        <label for="achievement-certificate_pdf" class="form-label">Certificate PDF</label>
+                        <p class="m-0"><label for="achievement-certificate_pdf" class="form-label">Certificate PDF</label></p>
+                        <img src="{{asset('img/materials/pdf.jpg')}}" id="certificate_pdf-preview" class="img-thumbnail img-grayscale mb-2" style="max-height:240px">
                         <input type="file" name="certificate_pdf" id="achievement-certificate_pdf" class="form-control form-control-sm" accept=".pdf" value="{{ old('certificate_pdf') }}">
                     </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Documentation images</label>
-                    <div id="container-documentations" class="flex-start flex-wrap gap-3">
-                        <label for="achievement-documentation">
-                        <div class="flex-center rounded border btn-outline-primary" style="height:240px;width:240px;" role="button">
-                            <div class="text-center" style="height:80px;width:60px;">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M432,112V96a48.14,48.14,0,0,0-48-48H64A48.14,48.14,0,0,0,16,96V352a48.14,48.14,0,0,0,48,48H80" style="fill:none;stroke:currentColor;stroke-linejoin:round;stroke-width:32px"/><rect x="96" y="128" width="400" height="336" rx="45.99" ry="45.99" style="fill:none;stroke:currentColor;stroke-linejoin:round;stroke-width:32px"/><ellipse cx="372.92" cy="219.64" rx="30.77" ry="30.55" style="fill:none;stroke:currentColor;stroke-miterlimit:10;stroke-width:32px"/><path d="M342.15,372.17,255,285.78a30.93,30.93,0,0,0-42.18-1.21L96,387.64" style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/><path d="M265.23,464,383.82,346.27a31,31,0,0,1,41.46-1.87L496,402.91" style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"/></svg>
-                            </div>
-                        </div>
-                        </label>
-                    </div>
-                    <p class="form-note">*) maximum allowed file size is 2 MB. You can go to <a href="https://www.iloveimg.com/resize-image" class="text-primary fw-500" target="_blank">this website</a> to resize your image's size</p>
-                    <div id="documentation-input" class="d-none">
-                        <input type="file" name="image" id="achievement-documentation">
-                    </div>
+                    <p class="fs-10">Submit achievement data before adding documentation images</p>
+                </div>
+                <div class="mb-3">
+                    <p class="form-note">*) maximum allowed image size is 2 MB. You can go to <a href="https://www.iloveimg.com/resize-image" class="text-primary fw-500" target="_blank">this website</a> to resize your image's size</p>
                 </div>
                 <div class="flex-end gap-3">
-                    <button class="btn btn-primary flex-center gap-2"><i class="bx bx-mail-send"></i>Submit</button>
+                    <button type="submit" class="btn btn-primary flex-center gap-2"><i class="bx bx-mail-send"></i>Submit</button>
                 </div>
                 </form>
                 <!-- form achievement end -->
@@ -175,32 +172,33 @@ img { max-width: 100%; }
 @push('scripts')
 <script type="text/javascript">
     
-// documentation
-var image_number = 1;
-$('input[name="image"]').change(function(e) {
-    if(image_number >= 4) {
-        return infoMessage("you've reached the maximum allowed number of files");
-    }
+// file handler
+$('input[name="certificate_image"]').change(function(e) {
     if(e.target.files && e.target.files[0]) {
         let file = e.target.files[0];
         const maxAllowedSize = 1 * 1024 * 1024;
         if(file.size > maxAllowedSize) {
-            return infoMessage('your file exceed the maximum allowed file size');
+            infoMessage('your file exceed the maximum allowed file size');
+            return $(this).val('');
         }
     }
-    let image_val = $(this)[0].files[0];
     let reader = new FileReader();
     reader.onload = (e) => { 
-        image_number += 1;
-        $('#container-documentations').append(
-            '<img id="documentation-image-'+ image_number +'" src="" class="img-thumbnail popper hover-pointer" style="height:240px;" title="" onclick="modalImage('+ image_number +')">'
-        );
-        $('#documentation-image-' + image_number).attr('src', e.target.result); 
-        $('#documentation-input').append(
-            '<input type="text" id="image-'+ image_number +'" name="images['+ image_number +']" value="'+ e.target.result +'">'
-        );
+        $('#certificate_image-preview').attr('src', e.target.result);
     }
     reader.readAsDataURL(this.files[0]); 
+});
+$('input[name="certificate_pdf"]').change(function(e) {
+    if(e.target.files && e.target.files[0]) {
+        let file = e.target.files[0];
+        const maxAllowedSize = 1 * 1024 * 1024;
+        if(file.size > maxAllowedSize) {
+            infoMessage('your file exceed the maximum allowed file size');
+            $('#certificate_pdf-preview').addClass('img-grayscale');
+            return $(this).val('');
+        }
+    }
+    $('#certificate_pdf-preview').removeClass('img-grayscale');
 });
 
 // select subject start

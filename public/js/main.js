@@ -27,26 +27,62 @@ const confirmDelete = (message) => {
   });
 };
 
-$(document).ready(function(){
+    
+// form ajax
+$('.formHandler').submit(function(e) {
+  e.preventDefault();
+  $('.alert').hide().html('');
+  let formData = ($(this).attr('method') == "Post") ? new FormData($(this)[0]) : $(this).serialize();
+  let config = {
+      method: $(this).attr('method'), url: domain + $(this).attr('action'), data: formData,
+  };
+  console.log(config);
+  axios(config)
+  .then((response) => {
+      $('#alert-success').hide().removeClass('d-none').fadeIn('slow').append(response.data.message);
+      successMessage(response.data.message);
+      if(response.data.refresh == true) {
+          window.location.reload();
+      }
+  })
+  .catch((error) => {
+      console.log(error.response);
+      errorMessage(error.response.data.message);
+      if(error.response.data) {
+          validationMessage(error.response.data.errors);
+      }
+  });
+});
 
+// validation message
+const validationMessage = (errorObject) => {
+    Object.keys(errorObject).forEach(name => {
+        errorObject[name].forEach(message => {
+            $('#alert-'+name).hide().removeClass('d-none').fadeIn('slow').append("<li class='list-unstyled'>"+message+"</li>");
+        });
+    });
+};
+
+$(document).ready(function(){
+  // warning before continue
   $('.btn-warn').click(function(e){
-      e.preventDefault();
-      var url = $(this).attr('href');
-      Swal.fire({
-          title: 'Are you sure?',
-          icon: 'info',
-          text: $(this).attr('data-warning'),
-          showCancelButton: true,
-          cancelButtonColor: '#666',
-          cancelButtonText: 'Cancel',
-          confirmButtonColor: '#0d6efd',
-          confirmButtonText: "Continue"
-          }).then((result) => {
-          if(!result.isConfirmed) {
-              return false;
-          }
-          return window.location.href = url;
-      })
+    e.preventDefault();
+    var url = $(this).attr('href');
+    Swal.fire({
+        title: 'Are you sure?',
+        icon: 'info',
+        text: $(this).attr('data-warning'),
+        showCancelButton: true,
+        cancelButtonColor: '#666',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#0d6efd',
+        confirmButtonText: "Continue"
+        }).then((result) => {
+        if(!result.isConfirmed) {
+            return false;
+        }
+        return window.location.href = url;
+    })
   });
 
   // window size
@@ -56,6 +92,12 @@ $(document).ready(function(){
       $('.flex-remove-md').removeClass('d-flex').addClass('d-flex');
   }
 });
+
+// function toastr
+function successMessage(message) { toastr.success(message, 'Success!'); } 
+function infoMessage(message) { toastr.info(message, 'Info'); } 
+function warningMessage(message) { toastr.error(message, 'Warning!'); } 
+function errorMessage(message) { toastr.error(message, 'Error!'); } 
 
 (function() {
   "use strict";

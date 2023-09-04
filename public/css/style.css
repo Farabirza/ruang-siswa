@@ -113,10 +113,6 @@ h1, h2, h3, h4, h5, h6 {
   transform-origin: bottom left;
 }
 
-.vertical-center {
-    display: flex;
-    align-items: center;
-}
 .loader { position: relative; width: 120px; display: none; }
 
 .page-title {
@@ -140,9 +136,8 @@ h1, h2, h3, h4, h5, h6 {
   bottom: 0;
   left: 0;
 }
-@media (max-width:1199px) {
-    .page-title h1 { font-size: 24pt; }
-}
+
+.img-grayscale { filter: grayscale(100%); }
 
 /* ================= Custom template end ================= */
 

@@ -11,7 +11,7 @@ class UpdateAchievementRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,14 @@ class UpdateAchievementRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'subject_id' => 'required',
+            'title' => 'required|max:255|min:6',
+            'year' => 'required|digits:4|integer|min:'.(date('Y')-10).'|max:'.(date('Y')),
+            'organizer' => 'max:255',
+            'url' => 'max:255',
+            'description' => 'max:1000',
+            'level' => 'required',
+            'grade_level' => 'required',
         ];
     }
 }

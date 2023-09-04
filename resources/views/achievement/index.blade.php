@@ -30,7 +30,7 @@ table { font-size: .8em; }
     </div>
 
     <!-- container start -->
-    <div class="container-fluid mb-3">
+    <div class="container-fluid mb-4">
         <div class="row bg-white p-3 mx-2 rounded shadow">
             <div class="col-md-12 py-2">
                 <h3 class="d-flex align-items-center justify-content-between gap-2 fs-16 mb-3"><span class="flex-start gap-2"><i class="bx bx-list-ul"></i>Achievement list</span><a href="/achievement/create" class="popper" title="New achievement"><i class="bx bx-plus p-1 rounded-circle border border-primary btn-outline-primary"></i></a></h3>
@@ -47,12 +47,13 @@ table { font-size: .8em; }
                         <tbody>
                             <?php $i = 1; ?>
                             @forelse($achievements as $item)
+                            @if($item->confirmed == 1)
                             <tr>
                                 <td>{{($item->user->profile ? $item->user->profile->full_name : $item->user->email)}}</td>
                                 <td><a href="/achievement/{{$item->id}}" class="hover-primary">{{$item->title}}</a></td>
                                 <td>{{$item->grade_level}}</td>
                                 <td>{{$item->level}}</td>
-                                <td>{{$item->organizer}}</td>
+                                <td>{{($item->organizer) ? $item->organizer : '-'}}</td>
                                 <td>
                                     <div class="dropdown">
                                         <i class="bx bx-dots-vertical bx-border-circle btn-outline-dark p-1" role="button" data-bs-toggle="dropdown" aria-expanded="false"></i>
@@ -65,8 +66,9 @@ table { font-size: .8em; }
                                 </td>
                             </tr>
                             <?php $i++; ?>
+                            @endif
                             @empty
-                            <tr><td colspan="5" class="text-center fst-italic">Empty</td></tr>
+                            <tr><td colspan="6" class="text-center fst-italic">empty</td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -74,6 +76,61 @@ table { font-size: .8em; }
             </div>
         </div>
     </div>
+    <!-- container end -->
+    
+    @if(Auth::check() && Auth::user()->profile->role != 'student')
+    <!-- container start -->
+    <div class="container-fluid mb-4">
+        <div class="row bg-white p-3 mx-2 rounded shadow">
+            <div class="col-md-12 py-2">
+                <h3 class="d-flex align-items-center justify-content-between gap-2 fs-16 mb-3"><span class="text-danger flex-start gap-2"><i class="bx bx-check-square"></i>Unconfirmed</span></h3>
+                <p class="fs-9">These achievements cannot be seen by regular users until they are confirmed by any teacher or admin</p>
+                <div class="table-container">
+                    <table class="table table-striped" id="table-unconfirmed">
+                        <thead>
+                            <th>Name</th>
+                            <th>Title</th>
+                            <th>Grade</th>
+                            <th>Level</th>
+                            <th>Organizer</th>
+                            <th><i class="bx bx-dots-vertical"></i></th>
+                        </thead>
+                        <tbody>
+                            <?php $i = 1; ?>
+                            @forelse($achievements as $item)
+                            @if($item->confirmed == 0)
+                            <tr>
+                                <td>{{($item->user->profile ? $item->user->profile->full_name : $item->user->email)}}</td>
+                                <td><a href="/achievement/{{$item->id}}" class="hover-primary">{{$item->title}}</a></td>
+                                <td>{{$item->grade_level}}</td>
+                                <td>{{$item->level}}</td>
+                                <td>{{($item->organizer) ? $item->organizer : '-'}}</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <i class="bx bx-dots-vertical bx-border-circle btn-outline-dark p-1" role="button" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                                        <div class="dropdown-menu fs-9">
+                                            <a href="/achievement/{{$item->id}}/confirm"><div class="dropdown-item"><i class="bx bx-check-double"></i>Confirm</div></a>
+                                            <a href="/achievement/{{$item->id}}"><div class="dropdown-item"><i class="bx bx-file"></i>Detail</div></a>
+                                            <a href="/achievement/{{$item->id}}/edit"><div class="dropdown-item"><i class="bx bx-edit-alt"></i>Edit</div></a>
+                                            <a href="/achievement/{{$item->id}}/delete" class="btn-warn" data-warning="Do you wish to delete this achievement?"><div class="dropdown-item"><i class="bx bx-trash-alt"></i>Delete</div></a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php $i++; ?>
+                            @endif
+                            @empty
+                            <tr><td colspan="6" class="text-center fst-italic">empty</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- container end -->
+    @endif
+
 </section>
 
 @include('layouts.partials.modal_students')
@@ -84,6 +141,16 @@ table { font-size: .8em; }
 <script src="{{ asset('/vendor/datatables/datatables.min.js') }}"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+    if($('#table-achievements tbody tr').length == 0) {
+        $('#table-achievements tbody').append(`
+            <tr><td colspan="6" class="text-center">no achievement data has been confirmed yet</td></tr>
+        `);
+    }
+    if($('#table-unconfirmed tbody tr').length == 0) {
+        $('#table-unconfirmed tbody').append(`
+            <tr><td colspan="6" class="text-center">currently there is no unconfirmed achievement data</td></tr>
+        `);
+    }
     new DataTable('#table-achievements', {
         pageLength: 100,
         fixedColumns: true,

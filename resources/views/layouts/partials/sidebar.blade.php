@@ -186,7 +186,7 @@ a:hover { color: inherit }
                 <!-- achievement -->
                 <li id="link-achievement" class="nav-link mb-3"><i class="bx bx-medal"></i><span role="button" data-bs-toggle="collapse" data-bs-target="#submenu-achievement" aria-expanded="true" aria-controls="submenu-achievement">Achievement<i class='bx bx-chevron-down nav-drop'></i></span></li>
                 <ul class="bx-ul collapse nav-submenu mb-3" id="submenu-achievement">
-                    <li id="link-achievement-index" class="nav-list"><a href='/achievement'><i class="bx bx-list-ul"></i>All achievement</a></li>
+                    <li id="link-achievement-index" class="nav-list"><a href='/achievement'><i class="bx bx-list-ul"></i>Achievement list</a></li>
                     <li id="link-achievement-create" class="nav-list"><a href='/achievement/create'><i class="bx bx-plus"></i>Add new</a></li>
                 </ul>
                 <!-- achievement end -->

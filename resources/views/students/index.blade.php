@@ -2,8 +2,10 @@
 
 @push('css-styles')
 <link href="{{ asset('/vendor/datatables/datatables.min.css') }}" rel="stylesheet">
+<link href="{{ asset('/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
 <style>
 table { font-size: .8em; }
+td { vertical-align: middle; }
 .alert { font-size: .8em; padding: 10px; }
 .dropdown-item { display: flex; align-items: center; gap: 8px; padding-left: 10px; }
 .dropdown-item:hover { cursor: pointer; }
@@ -34,7 +36,7 @@ table { font-size: .8em; }
                 <div class="table-container">
                     <table id="table-students" class="table table-striped">
                         <thead>
-                            <th>#</th>
+                            <th>Profile</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Grade</th>
@@ -56,7 +58,15 @@ table { font-size: .8em; }
                                 }
                             ?>
                             <tr>
-                                <td>{{$i}}</td>
+                                @if($item->picture)
+                                <td>
+                                    <a href="{{asset('img/profiles/'.$item->picture)}}" class="glightbox" data-glightbox="title:{{$item->profile->full_name}};">
+                                        <img src="{{asset('img/profiles/'.$item->picture)}}" class="rounded-circle shadow-sm" style="max-height:40px">
+                                    </a>
+                                </td>
+                                @else
+                                <td><img src="{{asset('img/profiles/user.jpg')}}" class="rounded-circle shadow-sm" style="max-height:40px"></td>
+                                @endif
                                 <td>{{ $item->profile->full_name }}</td>
                                 <td>{{ $item->email }}</td>
                                 <td>{{ $grade_level }}</td>
@@ -97,7 +107,14 @@ table { font-size: .8em; }
 
 @push('scripts')
 <script src="{{ asset('/vendor/datatables/datatables.min.js') }}"></script>
+<script src="{{ asset('/vendor/glightbox/js/glightbox.min.js') }}"></script>
 <script type="text/javascript">
+// glightbox
+const lightbox = GLightbox({
+    touchNavigation: true,
+    loop: true,
+    autoplayVideos: true
+});
 $(document).ready(function() {
     new DataTable('#table-students', {
         pageLength: 100,

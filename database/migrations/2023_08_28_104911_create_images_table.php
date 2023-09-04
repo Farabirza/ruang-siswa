@@ -15,7 +15,9 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('file_name');
             $table->text('caption')->nullable();
-            $table->morphs('imageable');
+            // $table->morphs('imageable');
+            $table->string('imageable_type');
+            $table->foreignUuid('imageable_id');
             $table->timestamps();
         });
     }

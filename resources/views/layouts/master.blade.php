@@ -55,7 +55,7 @@ body { background: #f9f9f9; }
 <script src="{{ asset('/vendor/popper/popper.min.js') }}"></script>
 
 <!-- JS Files -->
-<script src="{{ asset('/js/main.js') }}"></script>
+<script src="{{ asset('/js/main.js') }}?v=1"></script>
 <script type="text/javascript">
 @auth
 const user_id = '{{Auth::user()->id}}'
@@ -106,12 +106,6 @@ $(document).ready(function(){
       timer: 3000
     });
 @endif
-
-// session toastr
-function successMessage(message) { toastr.success(message, 'Success!'); } 
-function infoMessage(message) { toastr.info(message, 'Info'); } 
-function warningMessage(message) { toastr.error(message, 'Warning!'); } 
-function errorMessage(message) { toastr.error(message, 'Error!'); } 
 </script>
 
 @stack('scripts')

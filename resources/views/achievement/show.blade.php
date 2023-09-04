@@ -70,7 +70,7 @@ table { font-size: .8em; }
                                 @if($achievement->url)
                                 <td><a href="//{{$achievement->url}}" class="hover-primary" target="_blank">{{$achievement->organizer}}</a></td>
                                 @else
-                                <td>{{$achievement->organizer}}</td>
+                                <td>{{($achievement->organizer) ? $achievement->organizer : '-'}}</td>
                                 @endif
                             </tr>
                             <tr>
@@ -85,17 +85,40 @@ table { font-size: .8em; }
                         </table>
                     </div>
                 </div>
+                @if($achievement->description)
+                <p class="text-primary mb-2 flex-start gap-2"><i class="bx bx-align-left"></i>Description</p>
+                <p class="fs-10 mb-3">{{$achievement->description}}</p>
+                @endif
                 @if($achievement->certificate_image)
-                <p class="text-primary mb-2 flex-start gap-2"><i class="bx bx-image-alt"></i>Certificate</p>
-                <div class="flex-start gap-3">
-                    <a href="{{asset('img/certificate/'.$achievement->certificate_image)}}" class="glightbox">
-                        <figure class="hover-shine"><img src="{{asset('img/certificate/'.$achievement->certificate_image)}}" style="max-height:320px" class="border"></figure>
-                    </a>
-                    @else
-                    <p class="text-muted mb-0">No certificate submitted</p>
+                <div class="mb-3">
+                    <p class="text-primary mb-2 flex-start gap-2"><i class="bx bx-image-alt"></i>Certificate</p>
+                    <div class="flex-start gap-3">
+                        <a href="{{asset('img/certificate/'.$achievement->certificate_image)}}" class="glightbox">
+                            <figure class="hover-shine"><img src="{{asset('img/certificate/'.$achievement->certificate_image)}}" style="max-height:320px" class="border"></figure>
+                        </a>
+                    </div>
+                </div>
+                @endif
+                @if(count($achievement->image) > 0)
+                <div class="mb-3">
+                    <p class="text-primary mb-2 flex-start gap-2"><i class="bx bx-images"></i>Photo</p>
+                    <div class="flex-start flex-wrap gap-3">
+                        @foreach($achievement->image as $item)
+                        <a href="{{asset('img/photos/'.$item->file_name)}}" class="glightbox_images" data-glightbox="title:{{$item->caption}};">
+                            <img src="{{asset('img/photos/'.$item->file_name)}}" class="img-thumbnail" style="max-height:240px;">
+                        </a>
+                        @endforeach
+                    </div>
                 </div>
                 @endif
             </div>
+            @if(Auth::check() && (Auth::user()->profile->role != 'student' || $achievement->user_id == Auth::user()->id))
+            <div class="mt-3 flex-start gap-3">
+                <hr class="col">
+                <a href="/achievement/{{$achievement->id}}/delete" class="btn btn-sm btn-outline-danger flex-start gap-2 btn-warn" data-warning="Do you wish to delete this achievement data?"><i class="bx bx-trash-alt"></i>Delete</a>
+                <a href="/achievement/{{$achievement->id}}/edit" class="btn btn-sm btn-success flex-start gap-2"><i class="bx bx-edit-alt"></i>Edit</a>
+            </div>
+            @endif
         </div>
     </div>
     <!-- container end -->
@@ -107,8 +130,15 @@ table { font-size: .8em; }
 @push('scripts')
 <script src="{{ asset('/vendor/glightbox/js/glightbox.min.js') }}"></script>
 <script type="text/javascript">
+const lightbox_images = GLightbox({
+    selector: '.glightbox_images',
+});
 const lightbox = GLightbox({
     selector: '.glightbox',
+});
+$(document).ready(function() {
+    $('#link-achievement').addClass('active');
+    $('#submenu-achievement').addClass('show');
 });
 </script>
 @endpush

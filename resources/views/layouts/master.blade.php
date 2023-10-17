@@ -15,7 +15,7 @@
 <link href="{{ asset('/vendor/toastr/toastr.min.css') }}" rel="stylesheet">
 
 <!-- Main CSS File -->
-<link href="{{ asset('/css/style.css') }}?v=1.2" rel="stylesheet">
+<link href="{{ asset('/css/style.css') }}?v=3" rel="stylesheet">
 <style>
 body { background: #f9f9f9; }
 </style>
@@ -61,7 +61,7 @@ body { background: #f9f9f9; }
 const user_id = '{{Auth::user()->id}}'
 @endauth
 const domain = 'http://localhost:8000/';
-// const domain = 'https://library.pribadidepok.sch.id/';
+// const domain = 'https://student.pribadidepok.sch.id/';
 
 $(document).ready(function(){    
     // popperjs

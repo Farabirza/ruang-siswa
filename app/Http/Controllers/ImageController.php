@@ -71,7 +71,7 @@ class ImageController extends Controller
     {
         // remove old pdf
         $image = Image::find($image_id);
-        $path = public_path('img/photos/'.$image->file_name);
+        $path = public_path('img/photos/'.$image->name);
         if(File::exists($path)) {
             $delete_image = unlink($path);
         }

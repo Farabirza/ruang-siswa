@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('achievements', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('title');
-            $table->integer('year')->nullable();
+            $table->string('attainment');
+            $table->string('competition');
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->string('organizer')->nullable();
             $table->string('url')->nullable();
             $table->text('description')->nullable();

@@ -16,7 +16,11 @@ table { font-size: .8em; }
             <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    @if($user->profile->role == 'student')
                     <li class="breadcrumb-item"><a href="/students">Students</a></li>
+                    @else
+                    <li class="breadcrumb-item">User</li>
+                    @endif
                     <li class="breadcrumb-item active" aria-current="page">{{$profile->full_name}}</li>
                 </ol>
             </nav>
@@ -37,7 +41,6 @@ table { font-size: .8em; }
                         <img src="{{ asset('img/profiles/user.jpg') }}" alt="" class="rounded shadow" style="max-height:240px">
                         @endif
                         <h5 class="text-primary fs-10 ls-1 mt-3 mb-1">{{$user->profile->full_name}}</h5>
-                        <p class="fs-8 fst-italic">{{$user->email}}</p>
                     </div>
                     <div class="col mb-2">
                         <table class="table">
@@ -111,8 +114,8 @@ table { font-size: .8em; }
                         @forelse($user->achievement->sortByDesc('created_at') as $item)
                         @if($item->confirmed == 1)
                         <tr>
-                            <td>{{date('j F Y', strtotime($item->created_at))}}</td>
-                            <td><a href="/achievement/{{$item->id}}" class="hover-primary">{{$item->title}}</a></td>
+                            <td>{{($item->start_date ? date('j F Y', strtotime($item->start_date)) : '-')}}</td>
+                            <td><a href="/achievement/{{$item->id}}" class="hover-primary">{{$item->attainment.' '.$item->competition}}</a></td>
                             <td>{{$item->grade_level}}</td>
                             <td>{{$item->level}}</td>
                             <td>{{($item->organizer) ? $item->organizer : '-'}}</td>

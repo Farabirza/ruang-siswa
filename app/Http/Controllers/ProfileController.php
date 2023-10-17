@@ -22,7 +22,7 @@ class ProfileController extends Controller
      */
     public function __construct() {
         $this->metaTags = [
-            'title' => 'Ruang Siswa',
+            'title' => 'Student Center',
             'description' => 'Unlock the world of knowledge!',
         ];
     }
@@ -38,8 +38,9 @@ class ProfileController extends Controller
     public function index()
     {
         return view('profile.index', [
+            'metaTags' => $this->metaTags,
             'dashboard_header' => '<i class="bx bxs-user me-3"></i><span>My Profile</span>',
-            'page_title' => "Ruang Siswa | Profile",
+            'page_title' => "Student Center | Profile",
             'user' => Auth::user(),
         ]);
     }
@@ -98,8 +99,9 @@ class ProfileController extends Controller
     public function show(Profile $profile)
     {
         return view('profile.show', [
+            'metaTags' => $this->metaTags,
             'dashboard_header' => '<i class="bx bxs-user me-3"></i><span>User Profile</span>',
-            'page_title' => "Ruang Siswa | Profile",
+            'page_title' => "Student Center | Profile",
             'profile' => $profile,
             'user' => User::find($profile->user_id),
         ]);

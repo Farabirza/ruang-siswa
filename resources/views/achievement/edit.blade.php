@@ -23,7 +23,7 @@ img { max-width: 100%; }
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
                     <li class="breadcrumb-item"><a href="/achievement">Achievement</a></li>
-                    <li class="breadcrumb-item"><a href="/achievement/{{$achievement->id}}">{{$achievement->title}}</a></li>
+                    <li class="breadcrumb-item"><a href="/achievement/{{$achievement->id}}">{{$achievement->attainment.' '.$achievement->competition}}</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Edit</li>
                 </ol>
             </nav>
@@ -50,11 +50,19 @@ img { max-width: 100%; }
                 </div>
                 <div class="mb-3 d-flex flex-remove-md gap-3">
                     <div class="col">
-                        <label for="achievement-title" class="form-label">Title</label>
-                        <input type="text" name="title" id="achievement-title" class="form-control form-control-sm" placeholder="ex: Juara 1 Olimpiade Sains Nasional" value="{{$achievement->title}}" required>
+                        <label for="achievement-attainment" class="form-label">Attainment</label>
+                        <input type="text" name="attainment" id="achievement-attainment" class="form-control form-control-sm" placeholder="ex: Gold Medal" value="{{$achievement->attainment}}" required>
                         <p class="form-note">*) required</p>
-                        <p id="alert-title" class="alert alert-danger d-none"></p>
+                        <p id="alert-attainment" class="alert alert-danger d-none"></p>
                     </div>
+                    <div class="col">
+                        <label for="achievement-competition" class="form-label">Competition</label>
+                        <input type="text" name="competition" id="achievement-competition" class="form-control form-control-sm" placeholder="ex: Olimpiade Sains Nasional" value="{{$achievement->competition}}" required>
+                        <p class="form-note">*) required</p>
+                        <p id="alert-competition" class="alert alert-danger d-none"></p>
+                    </div>
+                </div>
+                <div class="mb-3 d-flex flex-remove-md gap-3">
                     <div class="col">
                         <label for="achievement-level" class="form-label">Regional level</label>
                         <select name="level" id="achievement-level" class="form-select form-select-sm">
@@ -63,20 +71,29 @@ img { max-width: 100%; }
                             <option value="International">International</option>
                         </select>
                     </div>
-                </div>
-                <div class="mb-3 d-flex flex-remove-md gap-3">
                     <div class="col">
                         <label for="achievement-grade_level" class="form-label">Grade level</label>
                         <select name="grade_level" id="achievement-grade_level" class="form-select form-select-sm">
-                            <option value="Senior High">Senior high</option>
-                            <option value="Junior High">Junior high</option>
+                            <option value="Senior High">Senior High</option>
+                            <option value="Junior High">Junior High</option>
                             <option value="Elementary">Elementary</option>
                         </select>
                     </div>
+                </div>
+                <div class="mb-2">
+                    <p class="m-0 text-primary">Competition date</p>
+                </div>
+                <div class="mb-3 d-flex flex-remove-md gap-3">
                     <div class="col">
-                        <label for="achievement-year" class="form-label">Year</label>
-                        <input type="number" name="year" id="achievement-year" class="form-control form-control-sm" value="{{$achievement->year}}" placeholder="ex: {{date('Y')}}">
-                        <p id="alert-year" class="alert alert-danger d-none"></p>
+                        <label for="achievement-start_date" class="form-label">Starting from</label>
+                        <input type="date" name="start_date" id="achievement-start_date" class="form-control form-control-sm" value="{{ ($achievement->start_date ? $achievement->start_date : date('Y-m-d')) }}" required>
+                        <p class="form-note">*) required</p>
+                        <p id="alert-start_date" class="alert alert-danger d-none"></p>
+                    </div>
+                    <div class="col">
+                        <label for="achievement-end_date" class="form-label">Ended at</label>
+                        <input type="date" name="end_date" id="achievement-end_date" class="form-control form-control-sm" value="{{ $achievement->end_date }}">
+                        <p id="alert-end_date" class="alert alert-danger d-none"></p>
                     </div>
                 </div>
                 <div class="mb-3">
@@ -104,6 +121,7 @@ img { max-width: 100%; }
                     <div class="col">
                         <label for="achievement-url" class="form-label">URL</label>
                         <input type="text" name="url" id="achievement-url" class="form-control form-control-sm" placeholder="ex: https://pribadidepok.sch.id" value="{{$achievement->url}}">
+                        <p class="form-note">*) use complete URL with "https://" or "http://"</p>
                         <p class="form-note">*) link towards competition or organizer's homepage</p>
                         <p id="alert-url" class="alert alert-danger d-none"></p>
                     </div>
@@ -182,7 +200,7 @@ img { max-width: 100%; }
                         <!-- achievement images start -->
                         <?php $i = 1; ?>
                         @forelse($achievement->image as $item)
-                        <img id="achievement-image-{{$i}}" src="{{asset('img/photos/'.$item->file_name)}}" class="img-thumbnail popper hover-pointer" style="height:240px;" data-caption="{{$item->caption}}" onclick="modalAchievementImage(`{{$i}}`, '{{$item->id}}')">
+                        <img id="achievement-image-{{$i}}" src="{{asset('img/photos/'.$item->name)}}" class="img-thumbnail popper hover-pointer" style="height:240px;" data-caption="{{$item->caption}}" onclick="modalAchievementImage(`{{$i}}`, '{{$item->id}}')">
                         <?php $i++; ?>
                         @empty
                         @endforelse
@@ -249,7 +267,7 @@ function modalAchievementImage (item_id, image_id) {
 }
 
 // file handler
-var image_number = 1;
+var image_number = '{{count($achievement->image)}}';
 $('input[name="image"]').change(function(e) {
     if(image_number >= 10) {
         return infoMessage("you've reached the maximum allowed number of files");

@@ -153,10 +153,10 @@ a:hover { color: inherit }
     </div>
     @auth
     @if(Auth::user()->profile)
-    <div class="d-flex align-items-center gap-2 p-2 border border-light mb-3">
+    <div class="d-flex align-items-center gap-3 p-2 mb-3">
         <div>
             @if(Auth::user()->picture)
-            <img src="{{ asset('img/profiles/'.Auth::user()->picture) }}" alt="" class="rounded" style="max-height:100px" id="sidebar-user-picture">
+            <img src="{{ asset('img/profiles/'.Auth::user()->picture) }}" alt="" class="rounded border shadow-sm" style="max-height:100px" id="sidebar-user-picture">
             @else
             <img src="{{ asset('img/profiles/user.jpg') }}" alt="" class="rounded" style="max-height:100px" id="sidebar-user-picture">
             @endif
@@ -165,24 +165,23 @@ a:hover { color: inherit }
             <p class="mb-0 fw-500"><a href="/profile">{{ Auth::user()->profile->full_name }}</a></p>
             <p class="fst-italic mb-0 fs-8">{{ Auth::user()->profile->role }}</p>
             @if(Auth::user()->authority->name != 'user')
-            <p class="mb-0 mt-1"><span class="badge bg-light text-primary">{{ Auth::user()->authority->name }}</span></p>
+            <p class="mb-0 mt-1"><a href="/admin/user" class="badge bg-light text-primary">{{ Auth::user()->authority->name }}</a></p>
             @endif
         </div>
     </div>
     @else
-    <div class="flex-center p-2 border border-light rounded-pill mb-3">
+    <div class="flex-center p-2 rounded-pill mb-3">
         <p class="fs-8 m-0">{{Auth::user()->email}}</p>
     </div>
     @endif
+    <div class="p-2"><div class="border border-1 border-light"></div></div>
     <div id="sidebar-menu" class="py-3 px-3">
         <nav class="nav-menu navbar">
             <ul>
                 @if(Auth::user()->profile)
-                @if(Auth::user()->profile->role != 'student')
                 <!-- students start -->
                 <li id="link-students" class="nav-link mb-3"><a href="/students" class="flex-start"><i class="bx bx-group"></i><span>Students</span></a></li>
                 <!-- students end -->
-                @endif
                 <!-- achievement -->
                 <li id="link-achievement" class="nav-link mb-3"><i class="bx bx-medal"></i><span role="button" data-bs-toggle="collapse" data-bs-target="#submenu-achievement" aria-expanded="true" aria-controls="submenu-achievement">Achievement<i class='bx bx-chevron-down nav-drop'></i></span></li>
                 <ul class="bx-ul collapse nav-submenu mb-3" id="submenu-achievement">
@@ -190,6 +189,13 @@ a:hover { color: inherit }
                     <li id="link-achievement-create" class="nav-list"><a href='/achievement/create'><i class="bx bx-plus"></i>Add new</a></li>
                 </ul>
                 <!-- achievement end -->
+                <!-- STEAM start -->
+                <li id="link-steam" class="nav-link mb-3"><i class="bx bx-analyse"></i><span role="button" data-bs-toggle="collapse" data-bs-target="#submenu-steam" aria-expanded="true" aria-controls="submenu-steam">STEAM<i class='bx bx-chevron-down nav-drop'></i></span></li>
+                <ul class="bx-ul collapse nav-submenu mb-3" id="submenu-steam">
+                    <li id="link-steam-index" class="nav-list"><a href='/steamProject'><i class="bx bx-list-ul"></i>STEAM projects</a></li>
+                    <li id="link-steam-create" class="nav-list"><a href='/steamProject/create'><i class="bx bx-plus"></i>New project</a></li>
+                </ul>
+                <!-- STEAM end -->
                 @endif
                 <!-- account -->
                 <li id="link-user" class="nav-link mb-3"><i class="bx bx-user"></i><span role="button" data-bs-toggle="collapse" data-bs-target="#submenu-user" aria-expanded="true" aria-controls="submenu-user">My Account<i class='bx bx-chevron-down nav-drop'></i></span></li>
@@ -198,6 +204,14 @@ a:hover { color: inherit }
                     <li id="link-user-logout" class="nav-list"><a href='/logout'><i class="bx bx-log-out-circle"></i>Sign out</a></li>
                 </ul>
                 <!-- account end -->
+                @if(Auth::user()->authority->name != 'user')
+                <!-- admin -->
+                <li id="link-admin" class="nav-link mb-3"><i class="bx bx-crown"></i><span role="button" data-bs-toggle="collapse" data-bs-target="#submenu-admin" aria-expanded="true" aria-controls="submenu-user">Admin<i class='bx bx-chevron-down nav-drop'></i></span></li>
+                <ul class="bx-ul collapse nav-submenu mb-3" id="submenu-admin">
+                    <li id="link-admin-profile" class="nav-list"><a href='/admin/user'><i class="bx bxs-user"></i>User Controller</a></li>
+                </ul>
+                <!-- admin end -->
+                @endif
             </ul>
         </nav>
     </div>

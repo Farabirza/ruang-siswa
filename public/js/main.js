@@ -28,7 +28,7 @@ const confirmDelete = (message) => {
 };
 
     
-// form ajax
+// form handler
 $('.formHandler').submit(function(e) {
   e.preventDefault();
   $('.alert').hide().html('');
@@ -36,7 +36,6 @@ $('.formHandler').submit(function(e) {
   let config = {
       method: $(this).attr('method'), url: domain + $(this).attr('action'), data: formData,
   };
-  console.log(config);
   axios(config)
   .then((response) => {
       $('#alert-success').hide().removeClass('d-none').fadeIn('slow').append(response.data.message);

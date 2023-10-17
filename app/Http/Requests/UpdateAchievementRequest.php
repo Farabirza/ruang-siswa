@@ -23,8 +23,11 @@ class UpdateAchievementRequest extends FormRequest
     {
         return [
             'subject_id' => 'required',
-            'title' => 'required|max:255|min:6',
-            'year' => 'required|digits:4|integer|min:'.(date('Y')-10).'|max:'.(date('Y')),
+            'attainment' => 'required|max:255',
+            'competition' => 'required|max:255|min:3',
+            // 'year' => 'required|digits:4|integer|min:'.(date('Y')-10).'|max:'.(date('Y')),
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
             'organizer' => 'max:255',
             'url' => 'max:255',
             'description' => 'max:1000',

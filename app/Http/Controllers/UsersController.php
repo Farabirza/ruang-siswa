@@ -22,7 +22,7 @@ class UsersController extends Controller
 {
     public function __construct() {
         $this->metaTags = [
-            'title' => 'Ruang Siswa',
+            'title' => 'Student Center',
             'description' => '',
         ];
     }
@@ -59,6 +59,7 @@ class UsersController extends Controller
             $authority = Authority::where('name', $get_authority)->first();
             if(!$authority) {
                 $create_authority = Authority::create(['name' => $get_authority]);
+                $authority = $create_authority;
             }
 
             $create_user = User::create([
@@ -74,6 +75,7 @@ class UsersController extends Controller
             return redirect()->intended('/');
 
             return view('user.create_username', [
+                'metaTags' => $this->metaTags,
                 'user' => $google,
                 'header_title' => '<i class="bx bx-user-plus me-3"></i><span>Registration</span>',
                 'page_title' => "Digital Library | Registration"
@@ -96,7 +98,7 @@ class UsersController extends Controller
     public function register()
     {
         return view('auth.register',[
-            //
+            'metaTags' => $this->metaTags,
         ]);
     }
     public function store(StoreUserRequest $request, User $user) {
@@ -125,7 +127,10 @@ class UsersController extends Controller
     }
     public function login()
     {
-        return view('auth.login',[ 'page_title' => 'Login Page' ]);
+        return view('auth.login', [ 
+            'metaTags' => $this->metaTags,
+            'page_title' => 'Login Page' 
+        ]);
     }
     public function authenticate(Request $request)
     {
@@ -169,7 +174,7 @@ class UsersController extends Controller
         return view('auth.confirmation', [
             'noSidebar' => true,
             'metaTags' => $this->metaTags,
-            'page_title' => 'Ruang Siswa | Confirmation',
+            'page_title' => 'Student Center | Confirmation',
         ]);
     }
     public function confirm_user($user_id)
@@ -181,12 +186,22 @@ class UsersController extends Controller
         $user->update(['confirmation' => 1, 'status' => 'active']);
         return back()->with('success', 'User confirmed');
     }
+    public function suspend_user($user_id)
+    {
+        if(Auth::user()->profile->role == 'student') {
+            return back()->with('error', 'Access denied!');
+        }
+        $user = User::find($user_id);
+        $user->update(['status' => 'suspended']);
+        return back()->with('success', 'User suspended');
+    }
     public function show(User $user)
     {
         if(!$user->profile) {
             return back()->with('error', 'This user is not verified yet');
         }
         return view('user.show', [
+            'metaTags' => $this->metaTags,
             'user' => $user,
         ]);
     }

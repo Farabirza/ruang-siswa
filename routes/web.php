@@ -8,7 +8,11 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\SteamProjectController;
+use App\Http\Controllers\SteamCategoryController;
+use App\Http\Controllers\SteamLogBookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,30 +32,58 @@ Route::get('/home', function () { return redirect('/'); });
 
 // Authentication
 Route::group([
-    'middleware' => ['auth', 'verified']
+    'middleware' => ['auth', 'verified', 'isActive']
     ], function () {
-    Route::resource('/user', UsersController::class)->only(['show', 'isActive']);
-    Route::resource('/students', StudentsController::class)->middleware(['isNotStudent', 'isActive']);
-    Route::resource('/achievement', AchievementController::class)->except(['show'])->middleware(['isActive']);
-    Route::resource('/profile', ProfileController::class);
-    Route::get('/confirmation', [UsersController::class, 'confirmation']);
+    Route::resource('/students', StudentsController::class)->except(['index'])->middleware(['isNotStudent']);
+    Route::resource('/students', StudentsController::class)->only(['index']);
+    Route::resource('/achievement', AchievementController::class)->except(['show', 'index']);
+    Route::resource('/steamProject', SteamProjectController::class)->except(['show', 'index']);
+    Route::resource('/steamCategory', SteamCategoryController::class);
+    Route::resource('/steamLogBook', SteamLogBookController::class)->only(['edit', 'update']);
     Route::get('/user/{user_id}/confirm', [UsersController::class, 'confirm_user']);
+    Route::get('/user/{user_id}/suspend', [UsersController::class, 'suspend_user']);
+    Route::get('/comment/{comment_id}/delete', [CommentController::class, 'delete']);
 });
-Route::resource('/achievement', AchievementController::class)->only('show');
+Route::resource('/user', UsersController::class)->only(['show'])->middleware(['auth', 'verified']);
 Route::resource('/user', UsersController::class)->only(['store']);
+Route::get('/confirmation', [UsersController::class, 'confirmation'])->middleware(['auth', 'verified']);
+Route::resource('/profile', ProfileController::class)->except(['show'])->middleware(['auth', 'verified']);
+Route::resource('/profile', ProfileController::class)->only(['show']);
 
 // Image
 Route::get('/image/{image_id}/delete', [ImageController::class, 'delete'])->middleware(['auth', 'verified']);
 
+// STEAM Project
+Route::group([
+    'middleware' => ['auth', 'verified', 'isActive'],
+    'prefix' => 'steamProject'
+    ], function () {
+    Route::get('/{steam_id}/delete', [SteamProjectController::class, 'destroy']);
+    Route::get('/{steam_id}/logbook/create', [SteamLogBookController::class, 'create']);
+    Route::post('/{steam_id}/comment', [SteamProjectController::class, 'store_comment']);
+});
+Route::resource('/steamProject', SteamProjectController::class)->only(['show', 'index']);
+Route::resource('/steamLogBook', SteamLogBookController::class)->only(['show']);
+
 // Achievement
 Route::group([
-    'middleware' => ['auth', 'verified'],
+    'middleware' => ['auth', 'verified', 'isActive'],
     'prefix' => 'achievement'
     ], function () {
-        Route::get('/{achievement_id}/delete', [AchievementController::class, 'delete']);
-        Route::get('/{achievement_id}/remove/image', [AchievementController::class, 'remove_image']);
-        Route::get('/{achievement_id}/remove/pdf', [AchievementController::class, 'remove_pdf']);
-        Route::get('/{achievement_id}/confirm', [AchievementController::class, 'confirm'])->middleware('isNotStudent');
+    Route::get('/{achievement_id}/delete', [AchievementController::class, 'delete']);
+    Route::get('/{achievement_id}/remove/image', [AchievementController::class, 'remove_image']);
+    Route::get('/{achievement_id}/remove/pdf', [AchievementController::class, 'remove_pdf']);
+    Route::get('/{achievement_id}/confirm', [AchievementController::class, 'confirm'])->middleware('isNotStudent');
+    Route::post('/{achievement_id}/comment', [AchievementController::class, 'store_comment']);
+});
+Route::resource('/achievement', AchievementController::class)->only(['show', 'index']);
+
+// Admin
+Route::group([
+    'middleware' => ['auth', 'verified', 'isAdmin'],
+    'prefix' => 'admin'
+    ], function () {
+    Route::get('/user', [AdminController::class, 'user_controller']);
 });
 
 // Action
@@ -59,9 +91,13 @@ Route::group([
     'middleware' => ['auth', 'verified'],
     'prefix' => 'action'
     ], function () {
+    Route::post('/admin', [AdminController::class, 'action'])->middleware(['isAdmin']);
     Route::post('/user', [UsersController::class, 'action']);
+    Route::post('/student', [StudentsController::class, 'action']);
     Route::post('/profile', [ProfileController::class, 'action']);
     Route::post('/achievement', [AchievementController::class, 'action']);
+    Route::post('/steam', [SteamProjectController::class, 'action']);
+    Route::post('/logbook', [SteamLogBookController::class, 'action']);
 });
 
 // Email 

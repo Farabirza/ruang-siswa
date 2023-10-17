@@ -72,8 +72,20 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Profile::class);
     }
+    public function comment()
+    {
+        return $this->hasMany(Comment::class);
+    }
     public function achievement()
     {
         return $this->hasMany(Achievement::class);
+    }
+    public function steamMember()
+    {
+        return $this->hasMany(SteamMember::class);
+    }
+    public function steamLogBook()
+    {
+        return $this->hasMany(SteamLogBook::class);
     }
 }

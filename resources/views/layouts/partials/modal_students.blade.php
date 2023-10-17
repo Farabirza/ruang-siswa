@@ -160,7 +160,7 @@ const submitPassword = () => {
     });
 };
 
-const modalPassword = (user_id, email) => {
+const modalResetPassword = (user_id, email) => {
     $('#form-reset-password').trigger('reset');
     $('#reset-password-user_id').val(user_id);
     $('#reset-password-email').html(email);
@@ -168,23 +168,6 @@ const modalPassword = (user_id, email) => {
 };
 // reset password end
 
-var password_visible = false;
-const togglePassword = () => {
-    let input = $('[name="password"]');
-    let input_confirm = $('[name="password_confirmation"]');
-    let input_btn = $('.btn-password-toggle');
-    if(password_visible == false) {
-        input.attr("type", "text");
-        input_confirm.attr("type", "text");
-        input_btn.removeClass('bx-show-alt').addClass('bx-hide');
-        password_visible = true;
-    } else {
-        input.attr("type", "password");
-        input_confirm.attr("type", "password");
-        input_btn.removeClass('bx-hide').addClass('bx-show-alt');
-        password_visible = false;
-    }
-};
 
 </script>
 @endpush

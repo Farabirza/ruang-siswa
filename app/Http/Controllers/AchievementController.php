@@ -6,10 +6,12 @@ use App\Models\Achievement;
 use App\Models\User;
 use App\Models\Profile;
 use App\Models\Image;
+use App\Models\Comment;
 use App\Models\Subject;
 
 use App\Http\Requests\StoreAchievementRequest;
 use App\Http\Requests\UpdateAchievementRequest;
+use App\Http\Requests\StoreCommentRequest;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +22,7 @@ class AchievementController extends Controller
 {
     public function __construct() {
         $this->metaTags = [
-            'title' => 'Ruang Siswa',
+            'title' => 'Student Center',
             'description' => '',
         ];
     }
@@ -38,8 +40,9 @@ class AchievementController extends Controller
     public function index()
     {
         return view('achievement.index', [
+            'metaTags' => $this->metaTags,
             'dashboard_header' => '<i class="bx bxs-medal me-3"></i><span>Achievement</span>',
-            'page_title' => "Ruang Siswa | Achievement",
+            'page_title' => "Student Center | Achievement",
             'achievements' => Achievement::orderByDesc('created_at')->get(),
             'subjects' => Subject::orderBy('name')->get(),
         ]);
@@ -54,8 +57,9 @@ class AchievementController extends Controller
             return $query->where('role', 'student')->orderBy('full_name');
         })->get();
         return view('achievement.create', [
+            'metaTags' => $this->metaTags,
             'dashboard_header' => '<i class="bx bxs-medal me-3"></i><span>Achievement</span>',
-            'page_title' => "Ruang Siswa | New Achievement",
+            'page_title' => "Student Center | New Achievement",
             'students' => $students,
             'subjects' => Subject::orderBy('name')->get(),
         ]);
@@ -97,8 +101,10 @@ class AchievementController extends Controller
         $create_achievement = Achievement::create([
             'user_id' => $request->user_id,
             'subject_id' => $subject_id,
-            'title' => $request->title,
-            'year' => $request->year,
+            'attainment' => $request->attainment,
+            'competition' => $request->competition,
+            'start_date' => $request->start_date,
+            'end_date' => ($request->start_date <= $request->end_date) ? $request->end_date : $request->start_date,
             'organizer' => $request->organizer,
             'url' => $request->url,
             'description' => $request->description,
@@ -122,10 +128,11 @@ class AchievementController extends Controller
             }
         }
         return view('achievement.show', [
+            'metaTags' => $this->metaTags,
             'dashboard_header' => '<i class="bx bxs-medal me-3"></i><span>Achievement</span>',
-            'page_title' => "Ruang Siswa | Achievement",
+            'page_title' => "Student Center | Achievement",
             'achievement' => $achievement,
-            'user' => $achievement->user,
+            'user' => User::find($achievement->user_id),
         ]);
     }
 
@@ -138,8 +145,9 @@ class AchievementController extends Controller
             return redirect('/')->with('error', 'Access denied');
         }
         return view('achievement.edit', [
+            'metaTags' => $this->metaTags,
             'dashboard_header' => '<i class="bx bxs-medal me-3"></i><span>Achievement</span>',
-            'page_title' => "Ruang Siswa | Edit Achievement",
+            'page_title' => "Student Center | Edit Achievement",
             'achievement' => $achievement,
             'subjects' => Subject::orderBy('name')->get(),
             'user' => $achievement->user,
@@ -173,8 +181,10 @@ class AchievementController extends Controller
         // update achievement
         $achievement->update([
             'subject_id' => $subject_id,
-            'title' => $request->title,
-            'year' => $request->year,
+            'attainment' => $request->attainment,
+            'competition' => $request->competition,
+            'start_date' => $request->start_date,
+            'end_date' => ($request->start_date <= $request->end_date) ? $request->end_date : $request->start_date,
             'organizer' => $request->organizer,
             'url' => $request->url,
             'description' => $request->description,
@@ -218,7 +228,7 @@ class AchievementController extends Controller
         // delete achievement image
         if(count($achievement->image) > 0) {
             foreach($achievement->image as $item) {
-                $path = public_path('img/photos/'.$item->file_name);
+                $path = public_path('img/photos/'.$item->name);
                 if(File::exists($path)) {
                     $delete_pdf = unlink($path);
                 }
@@ -227,7 +237,7 @@ class AchievementController extends Controller
         }
 
         $achievement->delete();
-        return back()->with('success', 'Achievement data deleted');
+        return redirect('/achievement')->with('success', 'Achievement data deleted');
     }
     public function confirm($achievement_id)
     {
@@ -266,6 +276,15 @@ class AchievementController extends Controller
         $achievement->update(['certificate_pdf' => '']);
         return back()->with('success', 'Certificate PDF removed ');
     }
+    public function store_comment(StoreCommentRequest $request, $achievement_id)
+    {
+        $achievement = Achievement::find($achievement_id);
+        $achievement_comment = $achievement->comment()->create([ 
+            'content' => $request->content, 
+            'user_id' => $request->user_id, 
+        ]);
+        return back()->with('success', "Comment posted");
+    }
     public function action(Request $request)
     {
         switch($request->action) {
@@ -294,7 +313,7 @@ class AchievementController extends Controller
                 $img_name = 'achievement-'.$user->username.'-'.time().'.'.$img_type;
                 $file = public_path('img/photos/'.$img_name);
                 file_put_contents($file, $img_base64);
-                $achievement_image = $achievement->image()->create([ 'file_name' => $img_name ]);
+                $achievement_image = $achievement->image()->create([ 'name' => $img_name ]);
 
                 return response()->json([
                     'message' => "New achievement image added",

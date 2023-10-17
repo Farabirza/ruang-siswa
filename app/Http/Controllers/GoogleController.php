@@ -12,7 +12,7 @@ class GoogleController extends Controller
 {
     public function __construct() {
         $this->metaTags = [
-            'title' => 'Ruang Siswa',
+            'title' => 'Student Center',
         ];
     }
     public function redirectToGoogle() {

@@ -6,6 +6,7 @@
 <style>
 input { font-size: .8em; }
 img { max-width: 100%; }
+table { font-size: .8em; }
 table thead th { font-weight: 500; }
 .alert { font-size: 9pt; padding: 10px; }
 .form-label { color: var(--bs-primary); font-size: 11pt; }
@@ -33,13 +34,22 @@ table thead th { font-weight: 500; }
         </div>
         <!-- breadcrumb end -->
     </div>
-    <div class="container mb-3">
+
+    <!-- container start -->
+    <div class="container mb-4">
         <div class="row bg-white p-3 rounded shadow">
             @if(!$user->profile)
             <div class="col-md-12 mb-2">
                 <div class="alert alert-success">
                     <h1 class="display-5 fs-30">Congratulations!</h1>
                     <p class="fs-10 mb-0">You have successfully registered, one last step and you are good to go :)</p>
+                </div>
+            </div>
+            @endif
+            @if($user->status == 'suspended')
+            <div class="col-md-12 mb-2">
+                <div class="alert alert-danger">
+                    <p class="fs-10 mb-0">Your account is being suspended, ask admin to re-activate this account</p>
                 </div>
             </div>
             @endif
@@ -83,7 +93,12 @@ table thead th { font-weight: 500; }
                             </span>
                         </div>
                         @else
-                        <div class="text-center fs-9 mb-0 fw-bold text-capitalize"><span class="rounded px-3 text-light" style="background:#d4af37">{{$user->profile->role}}</span></div>
+                        <div class="text-center">
+                            <p class="flex-center gap-3 fs-9 m-0">
+                                <span class="text-primary">Role</span>
+                                <span class="">{{ucfirst($user->profile->role)}}</span>
+                            </p>
+                        </div>
                         @endif
                     </div>
                     <div class="mb-2" style="min-widht:50%;">
@@ -228,6 +243,46 @@ table thead th { font-weight: 500; }
             <!-- user profile data end -->
         </div>
     </div>
+    <!-- container end -->
+    
+    @if(Auth::user()->profile)
+    <!-- container start -->
+    <div class="container mb-4">
+        <div class="row bg-white p-3 rounded shadow">
+            <div class="col-md-12 py-2">
+                <h3 class="d-flex align-items-center justify-content-between gap-2 fs-16 mb-4"><span class="flex-start gap-2"><i class="bx bx-medal"></i>My achievements</span></h3>
+                <table class="table table-striped" id="table-achievements">
+                    <thead>
+                        <th>Date</th>
+                        <th>Title</th>
+                        <th>Grade</th>
+                        <th>Level</th>
+                        <th>Organizer</th>
+                    </thead>
+                    <tbody>
+                        <?php $i = 1; ?>
+                        @forelse(Auth::user()->achievement->sortByDesc('created_at') as $item)
+                        @if($item->confirmed == 1)
+                        <tr>
+                            <td>{{($item->awarded_at ? date('j F Y', strtotime($item->awarded_at)) : '-')}}</td>
+                            <td><a href="/achievement/{{$item->id}}" class="hover-primary">{{$item->attainment.' '.$item->competition}}</a></td>
+                            <td>{{$item->grade_level}}</td>
+                            <td>{{$item->level}}</td>
+                            <td>{{($item->organizer) ? $item->organizer : '-'}}</td>
+                        </tr>
+                        <?php $i++; ?>
+                        @endif
+                        @empty
+                        <tr><td colspan="6" class="text-center fst-italic">empty</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- container end -->
+    @endif
+
 </section>
 
 <!-- modal image cropper -->

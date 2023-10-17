@@ -12,7 +12,7 @@ class GeneralController extends Controller
 {
     public function __construct() {
         $this->metaTags = [
-            'title' => 'Ruang Siswa',
+            'title' => 'Student Center',
             'description' => 'Unlock the World of Knowledge!',
         ];
     }
@@ -20,7 +20,7 @@ class GeneralController extends Controller
     {   
         return view('index', [
             'metaTags' => $this->metaTags,
-            'page_title' => 'Ruang Siswa',
+            'page_title' => 'Student Center',
         ]);
     }
     public function action(Request $request)

@@ -58,10 +58,23 @@ img { max-width: 100%; }
                 </div>
                 <div class="mb-3 d-flex flex-remove-md gap-3">
                     <div class="col">
-                        <label for="achievement-title" class="form-label">Title</label>
-                        <input type="text" name="title" id="achievement-title" class="form-control form-control-sm" placeholder="ex: Juara 1 Olimpiade Sains Nasional" value="{{ old('title') }}" required>
+                        <label for="achievement-attainment" class="form-label">Attainment</label>
+                        <input type="text" name="attainment" id="achievement-attainment" class="form-control form-control-sm" placeholder="ex: Gold Medal" value="{{ old('attainment') }}" required>
                         <p class="form-note">*) required</p>
+                        @error('attainment')
+                        <p class="alert alert-danger">{{$message}}</p>
+                        @enderror
                     </div>
+                    <div class="col">
+                        <label for="achievement-competition" class="form-label">Competition</label>
+                        <input type="text" name="competition" id="achievement-competition" class="form-control form-control-sm" placeholder="ex: Olimpiade Sains Nasional" value="{{ old('competition') }}" required>
+                        <p class="form-note">*) required</p>
+                        @error('competition')
+                        <p class="alert alert-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                </div>
+                <div class="mb-3 d-flex flex-remove-md gap-3">
                     <div class="col">
                         <label for="achievement-level" class="form-label">Regional level</label>
                         <select name="level" id="achievement-level" class="form-select form-select-sm">
@@ -70,20 +83,30 @@ img { max-width: 100%; }
                             <option value="International">International</option>
                         </select>
                     </div>
-                </div>
-                <div class="mb-3 d-flex flex-remove-md gap-3">
                     <div class="col">
                         <label for="achievement-grade_level" class="form-label">Grade level</label>
                         <select name="grade_level" id="achievement-grade_level" class="form-select form-select-sm">
-                            <option value="Senior High">Senior high</option>
-                            <option value="Junior High">Junior high</option>
+                            <option value="Senior High">Senior High</option>
+                            <option value="Junior High">Junior High</option>
                             <option value="Elementary">Elementary</option>
                         </select>
                     </div>
+                </div>
+                <div class="mb-2">
+                    <p class="m-0 text-primary">Competition date</p>
+                </div>
+                <div class="mb-3 d-flex flex-remove-md gap-3">
                     <div class="col">
-                        <label for="achievement-year" class="form-label">Year</label>
-                        <input type="number" name="year" id="achievement-year" class="form-control form-control-sm" value="{{ (old('year') ? old('year') : date('Y')) }}" placeholder="ex: {{date('Y')}}">
-                        @error('year')
+                        <label for="achievement-start_date" class="form-label">Starting from</label>
+                        <input type="date" name="start_date" id="achievement-start_date" class="form-control form-control-sm" value="{{ (old('start_date') ? old('start_date') : date('Y-m-d')) }}" required>
+                        @error('start_date')
+                        <p class="alert alert-danger">{{$message}}</p>
+                        @enderror
+                    </div>
+                    <div class="col">
+                        <label for="achievement-end_date" class="form-label">Ended at</label>
+                        <input type="date" name="end_date" id="achievement-end_date" class="form-control form-control-sm" value="{{ (old('end_date') ? old('end_date') : date('Y-m-d')) }}">
+                        @error('end_date')
                         <p class="alert alert-danger">{{$message}}</p>
                         @enderror
                     </div>
@@ -111,6 +134,7 @@ img { max-width: 100%; }
                     <div class="col">
                         <label for="achievement-url" class="form-label">URL</label>
                         <input type="text" name="url" id="achievement-url" class="form-control form-control-sm" placeholder="ex: https://pribadidepok.sch.id" value="{{ old('url') }}">
+                        <p class="form-note">*) use complete URL with "https://" or "http://"</p>
                         <p class="form-note">*) link towards competition or organizer's homepage</p>
                     </div>
                 </div>

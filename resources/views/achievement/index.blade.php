@@ -38,11 +38,15 @@ table { font-size: .8em; }
                     <table class="table table-striped" id="table-achievements">
                         <thead>
                             <th>Name</th>
-                            <th>Title</th>
+                            <th>Attainment</th>
+                            <th>Competition</th>
                             <th>Grade</th>
                             <th>Level</th>
+                            <th>Subject</th>
                             <th>Organizer</th>
+                            @auth
                             <th><i class="bx bx-dots-vertical"></i></th>
+                            @endauth
                         </thead>
                         <tbody>
                             <?php $i = 1; ?>
@@ -50,10 +54,13 @@ table { font-size: .8em; }
                             @if($item->confirmed == 1)
                             <tr>
                                 <td><a href="/profile/{{$item->user->profile->id}}" class="hover-primary">{{ $item->user->profile->full_name }}</a></td>
-                                <td><a href="/achievement/{{$item->id}}" class="hover-primary">{{$item->title}}</a></td>
+                                <td><a href="/achievement/{{$item->id}}" class="hover-primary">{{$item->attainment}}</a></td>
+                                <td><a href="/achievement/{{$item->id}}" class="hover-primary">{{$item->competition}}</a></td>
                                 <td>{{$item->grade_level}}</td>
                                 <td>{{$item->level}}</td>
+                                <td>{{$item->subject->name}}</td>
                                 <td>{{($item->organizer) ? $item->organizer : '-'}}</td>
+                                @auth
                                 <td>
                                     <div class="dropdown">
                                         <i class="bx bx-dots-vertical bx-border-circle btn-outline-dark p-1" role="button" data-bs-toggle="dropdown" aria-expanded="false"></i>
@@ -64,11 +71,12 @@ table { font-size: .8em; }
                                         </div>
                                     </div>
                                 </td>
+                                @endauth
                             </tr>
                             <?php $i++; ?>
                             @endif
                             @empty
-                            <tr><td colspan="6" class="text-center fst-italic">empty</td></tr>
+                            <tr><td colspan="100%" class="text-center fst-italic">empty</td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -90,9 +98,6 @@ table { font-size: .8em; }
                         <thead>
                             <th>Name</th>
                             <th>Title</th>
-                            <th>Grade</th>
-                            <th>Level</th>
-                            <th>Organizer</th>
                             <th><i class="bx bx-dots-vertical"></i></th>
                         </thead>
                         <tbody>
@@ -101,10 +106,7 @@ table { font-size: .8em; }
                             @if($item->confirmed == 0)
                             <tr>
                                 <td>{{($item->user->profile ? $item->user->profile->full_name : $item->user->email)}}</td>
-                                <td><a href="/achievement/{{$item->id}}" class="hover-primary">{{$item->title}}</a></td>
-                                <td>{{$item->grade_level}}</td>
-                                <td>{{$item->level}}</td>
-                                <td>{{($item->organizer) ? $item->organizer : '-'}}</td>
+                                <td><a href="/achievement/{{$item->id}}" class="hover-primary">{{$item->attainment.' '.$item->competition}}</a></td>
                                 <td>
                                     <div class="dropdown">
                                         <i class="bx bx-dots-vertical bx-border-circle btn-outline-dark p-1" role="button" data-bs-toggle="dropdown" aria-expanded="false"></i>
@@ -120,7 +122,7 @@ table { font-size: .8em; }
                             <?php $i++; ?>
                             @endif
                             @empty
-                            <tr><td colspan="6" class="text-center fst-italic">empty</td></tr>
+                            <tr><td colspan="3" class="text-center fst-italic">empty</td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -143,12 +145,12 @@ table { font-size: .8em; }
 $(document).ready(function() {
     if($('#table-achievements tbody tr').length == 0) {
         $('#table-achievements tbody').append(`
-            <tr><td colspan="6" class="text-center">no achievement data has been confirmed yet</td></tr>
+            <tr><td colspan="100%" class="text-center">no achievement data has been confirmed yet</td></tr>
         `);
     }
     if($('#table-unconfirmed tbody tr').length == 0) {
         $('#table-unconfirmed tbody').append(`
-            <tr><td colspan="6" class="text-center">currently there is no unconfirmed achievement data</td></tr>
+            <tr><td colspan="100%" class="text-center">currently there is no unconfirmed achievement data</td></tr>
         `);
     }
     new DataTable('#table-achievements', {

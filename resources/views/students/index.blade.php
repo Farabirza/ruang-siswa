@@ -29,8 +29,8 @@ td { vertical-align: middle; }
     </div>
 
     <!-- container start -->
-    <div class="container-fluid mb-3">
-        <div class="row bg-white p-3 mx-2 rounded shadow">
+    <div class="container mb-3">
+        <div class="row bg-white p-3 rounded shadow">
             <div class="col-md-12">
                 <h3 class="d-flex align-items-center gap-2 fs-16 mb-3"><i class="bx bx-group"></i>Student list</h3>
                 <div class="table-container">
@@ -65,7 +65,7 @@ td { vertical-align: middle; }
                                         <i class="bx bx-dots-vertical bx-border-circle btn-outline-dark p-1" role="button" data-bs-toggle="dropdown" aria-expanded="false"></i>
                                         <div class="dropdown-menu fs-9">
                                             <div class="dropdown-item" type="button" data-bs-toggle="offcanvas" data-bs-target="#studentProfile" aria-controls="studentProfile" onclick="offcanvasProfile('{{$i}}')"><i class="bx bx-file"></i>Profile</div>
-                                            <div class="dropdown-item" onclick="modalPassword('{{$item->id}}', '{{$item->email}}')"><i class="bx bx-key"></i>Reset password</div>
+                                            <div class="dropdown-item" onclick="modalResetPassword('{{$item->id}}', '{{$item->email}}')"><i class="bx bx-key"></i>Reset password</div>
                                         </div>
                                     </div>
                                 </td>

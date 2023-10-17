@@ -13,6 +13,10 @@ class Image extends Model
     use HasFactory, GenerateUuid;
 
     protected $guarded = [ 'id' ];
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
     public function imageable(): MorphTo
     {
         return $this->morphTo();

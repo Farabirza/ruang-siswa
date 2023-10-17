@@ -25,4 +25,8 @@ class Achievement extends Model
     {
         return $this->morphMany(Image::class, 'imageable');
     }
+    public function comment()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
 }

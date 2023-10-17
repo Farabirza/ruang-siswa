@@ -14,7 +14,7 @@ class StudentsController extends Controller
 {
     public function __construct() {
         $this->metaTags = [
-            'title' => 'Ruang Siswa',
+            'title' => 'Student Center',
             'description' => '',
         ];
     }
@@ -27,8 +27,9 @@ class StudentsController extends Controller
             return $query->where('role', 'student')->orderBy('full_name');
         })->get();
         return view('students.index', [
+            'metaTags' => $this->metaTags,
             'dashboard_header' => '<i class="bx bxs-group me-3"></i><span>Students</span>',
-            'page_title' => "Ruang Siswa | Students",
+            'page_title' => "Student Center | Students",
             'students' => $students,
         ]);
     }
@@ -79,5 +80,19 @@ class StudentsController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    public function action(Request $request)
+    {
+        switch($request->action) {
+            case 'get_students':
+                $keywords = (isset($request->student_keywords)) ? $request->student_keywords : '';
+                $students = User::whereHas('profile', function (Builder $query) use ($keywords) {
+                    return $query->where('role', 'student')->where('full_name', 'like', '%'.$keywords.'%')->orderBy('full_name');
+                })->with('profile')->get();
+                return response()->json([
+                    'students' => $students,
+                ], 200);
+            break;
+        }
     }
 }
